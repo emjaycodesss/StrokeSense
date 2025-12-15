@@ -3,37 +3,433 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrokeSense - Learn Baybayin the Smart & Fun Way</title>
   <link rel="stylesheet" href="style.css">
-  <title>My Landing Page</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lottie -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 </head>
 <body>
-  <header class="hero">
-    <h1>Welcome to My Product</h1>
-    <p>A short tagline that captures attention.</p>
-    <button class="cta">Get Started</button>
-  </header>
 
-  <section class="features">
-    <div class="feature-card">Feature 1</div>
-    <div class="feature-card">Feature 2</div>
-    <div class="feature-card">Feature 3</div>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-container">
+      <a href="#hero" class="navbar-logo">StrokeSense</a>
+
+      <div class="navbar-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#demo" class="nav-link">Demo</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+      </div>
+
+      <div class="navbar-auth">
+        <!-- UPDATED: Log In is text, Sign Up is Primary Button -->
+        <a href="#" class="nav-login-link">Log In</a>
+        <a href="#" class="btn btn-primary btn-nav-get-started">Sign Up</a>
+      </div>
+
+      <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Backdrop -->
+    <div class="navbar-mobile-backdrop" id="navbar-mobile-backdrop"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="navbar-mobile" id="navbar-mobile">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#demo" class="nav-link">Demo</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#" class="nav-link">Log In</a>
+      <a href="#" class="btn btn-primary">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Content -->
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Learn Baybayin<br>
+            the <span class="highlight-yellow">Smart</span> & <span class="highlight-yellow">Fun</span> Way
+          </h1>
+          <p class="hero-description">
+            The 16th Century meets the 21st. Master the ancient art of Baybayin with the power of AI.
+          </p>
+          
+          <div class="hero-buttons">
+            <button class="btn btn-primary">Get Started</button>
+            <button class="btn btn-secondary">
+              Learn more 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Social Proof (Floating, No Card, No Arrow) -->
+          <div class="hero-trust-container">
+            <div class="hero-trust">
+              <div class="avatars">
+                <!-- Classes allow CSS to color them automatically -->
+                <span class="avatar">A</span>
+                <span class="avatar">J</span>
+                <span class="avatar">R</span>
+              </div>
+              <p>Joined by <strong>1,200+</strong> early learners</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="hero-visual">
+          <div id="hero-lottie" style="max-width: 100%;"></div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="visual">
-    <img src="path-to-image.jpg" alt="Product Preview">
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Why StrokeSense?</h2>
+        <p class="section-subtitle">Knowledge of Baybayin is fading. Traditional learning is slow and isolated. StrokeSense makes cultural preservation accessible, interactive, and effective.</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="card feature-card" data-accent-color="#b090e8">
+          <div id="feature-icon-1" class="lottie-icon"></div>
+          <h3>Gamified Learning</h3>
+          <p>Turn history into high scores. Earn badges and level up as you master intricate characters.</p>
+        </div>
+
+        <div class="card feature-card" data-accent-color="#EFCF61">
+          <div id="feature-icon-2" class="lottie-icon"></div>
+          <h3>Real-Time AI Feedback</h3>
+          <p>Don't just guess. Our AI analyzes your stroke order, angle, and proportions instantly.</p>
+        </div>
+
+        <div class="card feature-card" data-accent-color="#4e9f96">
+          <div id="feature-icon-3" class="lottie-icon"></div>
+          <h3>Cultural Preservation</h3>
+          <p>More than just letters. Connect with Filipino identity and heritage stroke by stroke.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="info">
-    <h2>Why Choose Us?</h2>
-    <p>Some information about benefits or details…</p>
+  <!-- Product Demo Section -->
+  <section class="demo-section" id="demo">
+    <div class="container">
+      <div class="demo-container" data-animate="fade-in-up">
+        <!-- Top Instruction - Outside mockup -->
+        <div class="demo-instruction">
+          <div class="badge" style="background: var(--color-accent-primary); border: var(--border-width) solid var(--color-ink); box-shadow: var(--shadow-sm); font-size: 1rem;">
+            Instant feedback to help you improve as you go
+          </div>
+        </div>
+        
+        <div class="browser-mockup">
+          <div class="browser-chrome">
+            <div class="browser-dots">
+              <div class="browser-dot" style="background:#FF5F56;"></div>
+              <div class="browser-dot" style="background:#FFBD2E;"></div>
+              <div class="browser-dot" style="background:#27C93F;"></div>
+            </div>
+          </div>
+
+          <div class="browser-content">
+            <!-- 1. Internal App Header -->
+            <div class="app-ui-header">
+              <div class="character-info">
+                <!-- UPDATED: Text & Colors -->
+                <span class="badge" style="background: var(--color-accent-secondary); color: white;">Consonant</span>
+                <h2>Character: Wa (ᜏ)</h2>
+              </div>
+              <div class="progress-container">
+                <p>Mastery: <span id="mastery-percent">0</span>%</p>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="mastery-bar"></div></div>
+              </div>
+            </div>
+
+            <!-- 2. The Canvas Area -->
+            <div class="canvas-stage">
+              <!-- UPDATED: Tools Palette (SVGs instead of Emojis) -->
+              <div class="canvas-tools">
+                <div class="tool-btn active">
+                  <!-- Pencil Icon -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                    <path d="m15 5 4 4"/>
+                  </svg>
+                </div>
+                <div class="tool-btn">
+                  <!-- Eraser Icon -->
+                  <svg width="20" height="20" viewBox="0 0 256.00098 256.00098" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M216.001,207.833H130.34375l34.72949-34.72949.0166-.01465.01465-.0166,56.55371-56.55274a24.02962,24.02962,0,0,0,0-33.94141L176.40332,37.32324a24.0007,24.0007,0,0,0-33.94141,0L85.90283,93.88232l-.01025.00928-.00928.01026L29.32422,150.46094a24.00066,24.00066,0,0,0,0,33.9414l37.08887,37.08789a8.00232,8.00232,0,0,0,5.65722,2.34278H216.001a8,8,0,0,0,0-16ZM153.77637,48.6377a7.99708,7.99708,0,0,1,11.3125,0l45.25488,45.25488a8.00888,8.00888,0,0,1,0,11.31347l-50.91113,50.91114L102.86475,99.54932Z"/>
+                  </svg>
+                </div>
+                <div class="tool-btn">
+                  <!-- Reset/Refresh Icon -->
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                    <path d="M21 3v5h-5"/>
+                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                    <path d="M3 21v-5h5"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="drawing-canvas card" style="background: var(--color-bg); position: relative; overflow: visible;">
+                <!-- Floating feedback card -->
+                <div class="canvas-feedback">
+                  <div class="canvas-feedback-content">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Good Angle!</span>
+                  </div>
+                </div>
+                
+                <svg width="240" height="240" viewBox="0 0 200 200" class="canvas-svg" style="display:block; margin:0 auto;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <!-- Dotted Grid -->
+                  <line x1="100" y1="0" x2="100" y2="200" stroke="#E5E1D8" stroke-width="1" stroke-dasharray="5,5"/>
+                  <line x1="0" y1="100" x2="200" y2="100" stroke="#E5E1D8" stroke-width="1" stroke-dasharray="5,5"/>
+                  
+                  <!-- Baybayin character definitions -->
+                  <defs>
+                    <symbol overflow="visible" id="baybayin-wa">
+                      <path id="baybayin-path" d="M 52.65625 0 C 44.945313 0 39.09375 -2.046875 35.09375 -6.140625 C 31.09375 -10.242188 29.09375 -15.796875 29.09375 -22.796875 C 29.09375 -26.296875 29.519531 -30.269531 30.375 -34.71875 C 31.226563 -39.175781 32.003906 -43.15625 32.703125 -46.65625 C 33.097656 -48.351563 33.34375 -49.953125 33.4375 -51.453125 C 33.539063 -52.953125 33.59375 -54.5 33.59375 -56.09375 L 8.703125 -56.09375 L 8.703125 -66.296875 L 29.84375 -66.296875 C 35.550781 -66.296875 39.53125 -65.320313 41.78125 -63.375 C 44.03125 -61.425781 45.15625 -58.5 45.15625 -54.59375 C 45.15625 -51.695313 44.78125 -48.648438 44.03125 -45.453125 C 43.28125 -42.253906 42.53125 -38.878906 41.78125 -35.328125 C 41.03125 -31.773438 40.65625 -27.945313 40.65625 -23.84375 C 40.65625 -19.050781 41.753906 -15.578125 43.953125 -13.421875 C 46.148438 -11.273438 49.347656 -10.203125 53.546875 -10.203125 C 57.546875 -10.203125 61.546875 -11.453125 65.546875 -13.953125 C 69.546875 -16.453125 73.320313 -19.828125 76.875 -24.078125 C 80.425781 -28.328125 83.597656 -33.078125 86.390625 -38.328125 C 89.191406 -43.578125 91.394531 -49 93 -54.59375 C 94.601563 -60.195313 95.40625 -65.550781 95.40625 -70.65625 C 95.40625 -76.75 93.976563 -81.644531 91.125 -85.34375 C 88.269531 -89.050781 83.59375 -90.90625 77.09375 -90.90625 C 73 -90.90625 69.203125 -90.003906 65.703125 -88.203125 C 62.203125 -86.398438 59.203125 -83.898438 56.703125 -80.703125 L 49.046875 -87.296875 C 52.242188 -91.398438 56.191406 -94.722656 60.890625 -97.265625 C 65.597656 -99.816406 71.25 -101.09375 77.84375 -101.09375 C 83.445313 -101.09375 88.445313 -100.039063 92.84375 -97.9375 C 97.25 -95.84375 100.703125 -92.546875 103.203125 -88.046875 C 105.703125 -83.546875 106.953125 -77.644531 106.953125 -70.34375 C 106.953125 -64.144531 105.972656 -57.769531 104.015625 -51.21875 C 102.066406 -44.675781 99.34375 -38.351563 95.84375 -32.25 C 92.34375 -26.144531 88.289063 -20.664063 83.6875 -15.8125 C 79.09375 -10.96875 74.144531 -7.117188 68.84375 -4.265625 C 63.550781 -1.421875 58.15625 0 52.65625 0 Z"/>
+                    </symbol>
+                  </defs>
+                  
+                  <!-- 1. GUIDE LAYER (Static Wa character with lower opacity) -->
+                  <!-- IMPORTANT: This sits alone, outside any animated groups -->
+                  <g transform="translate(42.840305, 147.718241)" class="baybayin-guide">
+                    <use xlink:href="#baybayin-wa"/>
+                  </g>
+                  
+                  <!-- 2. ANIMATED LAYER (Draws, Fills, Resets) -->
+                  <g class="baybayin-character">
+                    <!-- Animated stroke version (drawing animation) -->
+                    <g transform="translate(42.840305, 147.718241)">
+                      <path class="baybayin-stroke" d="M 52.65625 0 C 44.945313 0 39.09375 -2.046875 35.09375 -6.140625 C 31.09375 -10.242188 29.09375 -15.796875 29.09375 -22.796875 C 29.09375 -26.296875 29.519531 -30.269531 30.375 -34.71875 C 31.226563 -39.175781 32.003906 -43.15625 32.703125 -46.65625 C 33.097656 -48.351563 33.34375 -49.953125 33.4375 -51.453125 C 33.539063 -52.953125 33.59375 -54.5 33.59375 -56.09375 L 8.703125 -56.09375 L 8.703125 -66.296875 L 29.84375 -66.296875 C 35.550781 -66.296875 39.53125 -65.320313 41.78125 -63.375 C 44.03125 -61.425781 45.15625 -58.5 45.15625 -54.59375 C 45.15625 -51.695313 44.78125 -48.648438 44.03125 -45.453125 C 43.28125 -42.253906 42.53125 -38.878906 41.78125 -35.328125 C 41.03125 -31.773438 40.65625 -27.945313 40.65625 -23.84375 C 40.65625 -19.050781 41.753906 -15.578125 43.953125 -13.421875 C 46.148438 -11.273438 49.347656 -10.203125 53.546875 -10.203125 C 57.546875 -10.203125 61.546875 -11.453125 65.546875 -13.953125 C 69.546875 -16.453125 73.320313 -19.828125 76.875 -24.078125 C 80.425781 -28.328125 83.597656 -33.078125 86.390625 -38.328125 C 89.191406 -43.578125 91.394531 -49 93 -54.59375 C 94.601563 -60.195313 95.40625 -65.550781 95.40625 -70.65625 C 95.40625 -76.75 93.976563 -81.644531 91.125 -85.34375 C 88.269531 -89.050781 83.59375 -90.90625 77.09375 -90.90625 C 73 -90.90625 69.203125 -90.003906 65.703125 -88.203125 C 62.203125 -86.398438 59.203125 -83.898438 56.703125 -80.703125 L 49.046875 -87.296875 C 52.242188 -91.398438 56.191406 -94.722656 60.890625 -97.265625 C 65.597656 -99.816406 71.25 -101.09375 77.84375 -101.09375 C 83.445313 -101.09375 88.445313 -100.039063 92.84375 -97.9375 C 97.25 -95.84375 100.703125 -92.546875 103.203125 -88.046875 C 105.703125 -83.546875 106.953125 -77.644531 106.953125 -70.34375 C 106.953125 -64.144531 105.972656 -57.769531 104.015625 -51.21875 C 102.066406 -44.675781 99.34375 -38.351563 95.84375 -32.25 C 92.34375 -26.144531 88.289063 -20.664063 83.6875 -15.8125 C 79.09375 -10.96875 74.144531 -7.117188 68.84375 -4.265625 C 63.550781 -1.421875 58.15625 0 52.65625 0 Z" fill="none" stroke="#0A0A0A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <!-- Final filled version (appears after animation) -->
+                    <g style="fill:#0A0A0A;fill-opacity:1;">
+                      <use xlink:href="#baybayin-wa" x="42.840305" y="147.718241" class="baybayin-fill"/>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Platform compatibility text -->
+        <p class="demo-platform-text">No installation required. Works on Mobile, Tablet & Desktop.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="cta-final">
-    <button class="cta">Sign Up Now</button>
+  <!-- For Everyone Section -->
+  <section class="for-everyone-section">
+    <div class="container">
+      <div class="for-everyone-grid">
+        <!-- Animation on Left -->
+        <div class="for-everyone-animation" data-animate="fade-in-right">
+          <div id="for-everyone-lottie" class="lottie-animation"></div>
+        </div>
+        
+        <!-- Content on Right -->
+        <div class="for-everyone-content" data-animate="fade-in-left">
+          <h2 class="section-title">For Everyone, Everywhere</h2>
+          <p class="section-subtitle">Whether you are a student, a teacher, a Filipino expatriate, or a calligraphy enthusiast, our platform adapts to you.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <footer>
-    <p>© 2025 My Company. All rights reserved.</p>
+  <!-- Stats Section -->
+  <section class="stats-section" data-animate="fade-in-up">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">17</div>
+          <div class="stat-label">Characters to Master</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Calligraphy Styles to Unlock</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free for Students</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section (Zig-Zag) -->
+  <section class="how-it-works-section" id="how-it-works">
+    <div class="container">
+      <div class="section-header" data-animate="fade-in-up">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Master Baybayin in three simple steps</p>
+      </div>
+
+      <div class="zigzag-timeline">
+        
+        <!-- STEP 1 (LEFT) -->
+        <div class="zigzag-row row-left">
+          <!-- Text -->
+          <div class="zigzag-content">
+            <div class="step-header">
+              <span class="step-badge" style="background:var(--color-accent-secondary); color:var(--color-surface);">Step 1</span>
+              <h3>Draw</h3>
+            </div>
+            <p>Trace characters on your screen using your finger or stylus. Practice the proper stroke order and form naturally.</p>
+          </div>
+          <!-- Icon Center -->
+          <div class="zigzag-icon-container" style="background:var(--color-accent-secondary); color:var(--color-surface);">
+             <!-- Pencil Icon -->
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+          </div>
+        </div>
+
+        <!-- STEP 2 (RIGHT) -->
+        <div class="zigzag-row row-right">
+          <!-- Icon Center -->
+          <div class="zigzag-icon-container" style="background:var(--color-accent-primary); color:var(--color-ink);">
+            <!-- Info/Learn Icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </div>
+          <!-- Text -->
+          <div class="zigzag-content">
+            <div class="step-header">
+              <span class="step-badge" style="background:var(--color-accent-primary); color:var(--color-ink);">Step 2</span>
+              <h3>Learn</h3>
+            </div>
+            <p>Get instant AI feedback on your accuracy. Our engine analyzes angle, proportion, and direction in real-time.</p>
+          </div>
+        </div>
+
+        <!-- STEP 3 (LEFT) -->
+        <div class="zigzag-row row-left">
+          <!-- Text -->
+          <div class="zigzag-content">
+             <div class="step-header">
+              <span class="step-badge" style="background:var(--color-accent-tertiary); color:var(--color-surface);">Step 3</span>
+              <h3>Advance</h3>
+            </div>
+            <p>Earn XP and unlock badges as you master the script. Track your journey from novice to master scribe.</p>
+          </div>
+          <!-- Icon Center -->
+          <div class="zigzag-icon-container" style="background:var(--color-accent-tertiary); color:var(--color-surface);">
+             <!-- Award/Ribbon Icon -->
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-container" data-animate="scale-in">
+        <h2 style="color:var(--color-surface); font-size:var(--text-h1); margin-bottom:1rem;">Ready to make your mark?</h2>
+        <p style="color:rgba(255,255,255,0.9); font-size:1.25rem;">Join thousands of learners preserving history in the digital age.</p>
+        
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-primary">Join StrokeSense</a>
+          <a href="#" class="btn btn-secondary">Partner with Us (For Schools)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Column -->
+        <div class="footer-col footer-brand">
+          <h3 class="footer-logo">StrokeSense</h3>
+          <p class="footer-tagline">Preserving the past, writing the future.</p>
+          <p class="footer-description">Learn Baybayin the smart and fun way. Master the ancient Filipino script with AI-powered feedback and gamified learning.</p>
+        </div>
+        
+        <!-- Links Column -->
+        <div class="footer-col footer-links">
+          <h4 class="footer-heading">Quick Links</h4>
+          <nav class="footer-nav">
+            <a href="#features" class="footer-link">Features</a>
+            <a href="#demo" class="footer-link">Demo</a>
+            <a href="#how-it-works" class="footer-link">How It Works</a>
+          </nav>
+        </div>
+        
+        <!-- Resources Column -->
+        <div class="footer-col footer-resources">
+          <h4 class="footer-heading">Resources</h4>
+          <nav class="footer-nav">
+            <a href="#" class="footer-link">For Schools</a>
+            <a href="#" class="footer-link">Documentation</a>
+            <a href="#" class="footer-link">Support</a>
+            <a href="#" class="footer-link">Donate</a>
+          </nav>
+        </div>
+        
+        <!-- Social Column -->
+        <div class="footer-col footer-socials">
+          <h4 class="footer-heading">Connect</h4>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="TikTok">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2025 StrokeSense</p>
+      </div>
+    </div>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
