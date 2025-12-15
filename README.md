@@ -4,6 +4,10 @@
 
 ---
 
+## Live Demo
+
+[https://emjaycodesss.github.io/StrokeSense/](https://emjaycodesss.github.io/StrokeSense/)
+
 ## About
 
 StrokeSense is a web-based learning platform that makes mastering Baybayin—the ancient Filipino script—accessible, interactive, and effective. Using AI-powered feedback and gamified learning, StrokeSense helps preserve cultural heritage while making the learning experience fun and engaging.
