@@ -13,15 +13,10 @@
   let lenisInstance = null;
 
   function init() {
-    // Reset scroll position to top on page load/refresh
     scrollToTopOnLoad();
-    
-    // Initialize Lenis smooth scroll
     initLenisScroll();
-    
-    // Animate navbar elements with stagger effect
     animateNavbarOnLoad();
-    
+    setupNavbarResizeHandler();
     initHeroLottie();
     initFeatureIcons();
     initForEveryoneLottie();
@@ -41,32 +36,28 @@
    * Creates buttery smooth scrolling experience
    */
   function initLenisScroll() {
-    // Check if Lenis is available
     if (typeof Lenis === 'undefined') {
       console.warn('Lenis library not loaded');
       return;
     }
 
-    // Initialize Lenis with smooth settings
     lenisInstance = new Lenis({
-      duration: 1.2,           // Scroll duration (higher = smoother but slower)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing function
-      orientation: 'vertical', // Scroll orientation
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
       gestureOrientation: 'vertical',
-      smoothWheel: true,       // Smooth mouse wheel scrolling
-      wheelMultiplier: 1,      // Mouse wheel speed multiplier
-      touchMultiplier: 2,      // Touch device speed multiplier
-      infinite: false,         // No infinite scroll
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
     });
 
-    // Animation frame loop for Lenis
     function raf(time) {
       lenisInstance.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
 
-    // Integrate Lenis with anchor links for smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
@@ -77,16 +68,14 @@
         
         if (targetElement) {
           e.preventDefault();
-          // Use Lenis scrollTo for smooth navigation
           lenisInstance.scrollTo(targetElement, {
-            offset: -100, // Offset for fixed navbar
+            offset: -100,
             duration: 1.2,
           });
         }
       });
     });
 
-    // Handle logo click - scroll to top
     const logo = document.querySelector('.navbar-logo');
     if (logo) {
       logo.addEventListener('click', function(e) {
@@ -95,7 +84,6 @@
       });
     }
 
-    // Handle back-to-top button with Lenis
     const backToTopButton = document.getElementById('back-to-top');
     if (backToTopButton) {
       backToTopButton.addEventListener('click', function(e) {
@@ -112,7 +100,6 @@
    * Ensures the page always starts from the top
    */
   function scrollToTopOnLoad() {
-    // Use both methods for maximum browser compatibility
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
@@ -157,21 +144,17 @@
     const heroVisual = heroSection?.querySelector('.hero-visual');
     const heroElements = [heroTitle, heroDescription, heroButtons, heroTrust, heroVisual].filter(el => el);
     
-    // TIMING CONFIGURATION
-    const initialDelay = 100;      // Wait for page to fully settle
-    const navStaggerDelay = 60;    // Delay between navbar elements
-    const heroStartDelay = 300;    // Delay after navbar starts before hero starts
-    const heroStaggerDelay = 100;  // Delay between hero elements
+    const initialDelay = 100;
+    const navStaggerDelay = 60;
+    const heroStartDelay = 300;
+    const heroStaggerDelay = 100;
     
-    // PHASE 1: Animate navbar elements with stagger
     setTimeout(() => {
       if (isMobile) {
-        // Mobile: animate logo and hamburger together (same timing)
         navElements[0].forEach(el => {
           el.classList.add('nav-visible');
         });
       } else {
-        // Desktop: stagger animation
         navElements.forEach((el, index) => {
           setTimeout(() => {
             el.classList.add('nav-visible');
@@ -179,7 +162,6 @@
         });
       }
       
-      // PHASE 2: After navbar animation starts, animate hero with stagger
       setTimeout(() => {
         heroElements.forEach((el, index) => {
           setTimeout(() => {
@@ -192,13 +174,62 @@
   }
 
   /**
+   * Handle navbar visibility on window resize
+   * Ensures correct elements are visible when switching between mobile/desktop
+   */
+  function setupNavbarResizeHandler() {
+    let resizeTimeout;
+    
+    function updateNavbarVisibility() {
+      const navbar = document.querySelector('.navbar');
+      if (!navbar) return;
+      
+      const logo = navbar.querySelector('.navbar-logo');
+      const navLinks = Array.from(navbar.querySelectorAll('.navbar-links .nav-link'));
+      const authElements = Array.from(navbar.querySelectorAll('.navbar-auth > *'));
+      const hamburgerToggle = navbar.querySelector('.navbar-toggle');
+      
+      const isMobile = window.innerWidth <= 991;
+      
+      // Always ensure logo is visible
+      if (logo) {
+        logo.classList.add('nav-visible');
+      }
+      
+      if (isMobile) {
+        // Mobile: show hamburger, hide nav links and auth elements
+        if (hamburgerToggle) {
+          hamburgerToggle.classList.add('nav-visible');
+        }
+        navLinks.forEach(link => link.classList.remove('nav-visible'));
+        authElements.forEach(el => el.classList.remove('nav-visible'));
+      } else {
+        // Desktop: show nav links and auth elements, hide hamburger
+        if (hamburgerToggle) {
+          hamburgerToggle.classList.remove('nav-visible');
+        }
+        navLinks.forEach(link => link.classList.add('nav-visible'));
+        authElements.forEach(el => el.classList.add('nav-visible'));
+      }
+    }
+    
+    // Throttle resize events
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateNavbarVisibility, 150);
+    });
+    
+    // Initial check after animation completes (delay to let initial animation run first)
+    setTimeout(updateNavbarVisibility, 500);
+  }
+
+  /**
    * Initialize Lottie animation for hero section
    * Loads and plays the hero animation from the assets folder
    * Supports both .json and .lottie file formats
    * Uses multiple loading strategies for maximum compatibility
    */
   function initHeroLottie() {
-    // Check if Lottie library is loaded
     if (typeof lottie === 'undefined') {
       console.warn('Lottie library not loaded');
       return;
@@ -210,18 +241,13 @@
       return;
     }
 
-    // Ensure container is visible and properly sized
     lottieContainer.style.display = 'block';
     lottieContainer.style.visibility = 'visible';
     lottieContainer.style.opacity = '1';
 
-    // Try loading .json file first (extracted from .lottie archive)
-    // The .lottie format is a ZIP archive that contains JSON, so we use the JSON directly
     loadLottieAnimation('assets/hero_animation.json', function() {
-      // If .json fails, try .lottie as fallback (though it may not work with standard lottie-web)
       console.log('Trying .lottie fallback...');
       loadLottieAnimation('assets/hero_animation.lottie', function() {
-        // If both fail, show error message
         console.error('Both .json and .lottie formats failed to load');
         lottieContainer.innerHTML = '<div style="text-align: center; color: #6B6B6B; padding: 2rem; font-family: var(--font-body);">Animation file not found. Please ensure hero_animation.json exists in the assets folder.</div>';
       });
@@ -250,7 +276,6 @@
       try {
         animation = lottie.loadAnimation(animationConfig);
         
-        // Set a timeout to detect if loading fails silently
         errorTimeout = setTimeout(function() {
           if (!hasLoaded) {
             console.warn('Animation loading timeout for:', animationPath);
@@ -258,9 +283,8 @@
               onError();
             }
           }
-        }, 5000); // 5 second timeout
+        }, 5000);
         
-        // Handle successful animation load
         const onDataReady = function() {
           if (!hasLoaded) {
             hasLoaded = true;
@@ -268,14 +292,12 @@
             console.log('Hero Lottie animation loaded successfully from:', animationPath);
             lottieContainer.style.opacity = '1';
             lottieContainer.style.visibility = 'visible';
-            // Remove error listeners since we succeeded
             if (animation) {
               animation.removeEventListener('data_failed', onDataFailed);
             }
           }
         };
 
-        // Handle animation load failure
         const onDataFailed = function() {
           if (!hasLoaded) {
             clearTimeout(errorTimeout);
@@ -286,13 +308,11 @@
           }
         };
 
-        // Multiple event listeners to catch different loading scenarios
         animation.addEventListener('data_ready', onDataReady);
         animation.addEventListener('DOMLoaded', onDataReady);
         animation.addEventListener('config_ready', onDataReady);
         animation.addEventListener('data_failed', onDataFailed);
 
-        // Also check if animation is already loaded (for cached files)
         if (animation.isLoaded) {
           onDataReady();
         }
@@ -312,13 +332,11 @@
    * Loads icon1.json, icon2.json, and icon3.json for the three feature cards
    */
   function initFeatureIcons() {
-    // Check if Lottie library is loaded
     if (typeof lottie === 'undefined') {
       console.warn('Lottie library not loaded');
       return;
     }
 
-    // Icon 1: Gamified Learning (rocket)
     const icon1Container = document.getElementById('feature-icon-1');
     if (icon1Container) {
       lottie.loadAnimation({
@@ -330,7 +348,6 @@
       });
     }
 
-    // Icon 2: Real-Time AI Feedback (AI decision)
     const icon2Container = document.getElementById('feature-icon-2');
     if (icon2Container) {
       lottie.loadAnimation({
@@ -342,7 +359,6 @@
       });
     }
 
-    // Icon 3: Cultural Preservation (sunrise)
     const icon3Container = document.getElementById('feature-icon-3');
     if (icon3Container) {
       lottie.loadAnimation({
@@ -360,7 +376,6 @@
    * Loads anyone.json animation
    */
   function initForEveryoneLottie() {
-    // Check if Lottie library is loaded
     if (typeof lottie === 'undefined') {
       console.warn('Lottie library not loaded');
       return;
@@ -409,7 +424,6 @@
       }
     }
 
-    // Throttle scroll events for performance
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
@@ -461,7 +475,6 @@
       });
 
       // Close mobile menu when clicking on a link
-      // Updated to use .nav-link instead of .mobile-nav-link to match new HTML structure
       const mobileLinks = navbarMobile.querySelectorAll('.nav-link, .btn');
       mobileLinks.forEach(link => {
         link.addEventListener('click', function() {
@@ -511,7 +524,6 @@
     
     if (!demoSection || !stroke) return;
     
-    // Get actual path length for accurate animation
     const pathLength = stroke.getTotalLength();
     
     // Animation state
@@ -548,7 +560,6 @@
      * Reset all elements to initial hidden state (instant, no transitions)
      */
     function resetAnimation() {
-      // Clear any pending timeouts and animations
       animationTimeouts.forEach(id => clearTimeout(id));
       animationTimeouts = [];
       if (loopTimeout) {
@@ -568,26 +579,22 @@
         bubbleAnimationId = null;
       }
       
-      // Reset stroke - completely hidden, ready for next draw
       if (stroke) {
         stroke.style.strokeDashoffset = pathLength;
         stroke.style.opacity = '1';
       }
       
-      // Reset fill - hidden
       if (fill) {
         fill.style.opacity = '0';
       }
       
-      // Reset bubble - hidden instantly (no transition)
       if (bubble) {
         bubble.style.transition = 'none';
         bubble.style.opacity = '0';
         bubble.style.transform = 'scale(0) rotate(-10deg)';
-        bubble.offsetHeight; // Force reflow
+        bubble.offsetHeight;
       }
       
-      // Reset mastery
       if (masteryPercent) {
         masteryPercent.textContent = '0';
       }
@@ -602,7 +609,6 @@
     function animateStroke(onComplete) {
       const startTime = performance.now();
       
-      // Ensure stroke is visible and ready
       stroke.style.opacity = '1';
       stroke.style.strokeDashoffset = pathLength;
       
@@ -612,12 +618,10 @@
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / STROKE_DURATION, 1);
         
-        // Ease in-out for smooth drawing
         const eased = progress < 0.5
           ? 2 * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
         
-        // Calculate dashoffset (pathLength = hidden, 0 = fully drawn)
         const offset = pathLength * (1 - eased);
         stroke.style.strokeDashoffset = offset;
         
@@ -642,7 +646,7 @@
         return;
       }
       
-      const duration = 300; // 300ms fade
+      const duration = 300;
       const startTime = performance.now();
       
       function animate(currentTime) {
@@ -651,10 +655,8 @@
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        // Ease out for smooth appearance
         const eased = 1 - Math.pow(1 - progress, 3);
         
-        // Fade in fill, fade out stroke simultaneously
         fill.style.opacity = eased;
         stroke.style.opacity = 1 - eased;
         
@@ -662,7 +664,6 @@
           fillAnimationId = requestAnimationFrame(animate);
         } else {
           fillAnimationId = null;
-          // Ensure final state is locked
           fill.style.opacity = '1';
           stroke.style.opacity = '0';
           if (onComplete) onComplete();
@@ -690,13 +691,12 @@
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        // Bounce easing for pop effect
         const eased = progress < 0.5
           ? 4 * progress * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 3) / 2;
         
-        const scale = 0.5 + (eased * 0.5); // Scale from 0.5 to 1
-        const overshoot = progress < 0.7 ? 1 + (progress * 0.15) : 1; // Slight overshoot
+        const scale = 0.5 + (eased * 0.5);
+        const overshoot = progress < 0.7 ? 1 + (progress * 0.15) : 1;
         
         bubble.style.opacity = eased;
         bubble.style.transform = `scale(${scale * overshoot}) rotate(${(1 - eased) * -10}deg)`;
@@ -705,7 +705,6 @@
           bubbleAnimationId = requestAnimationFrame(animate);
         } else {
           bubbleAnimationId = null;
-          // Lock final state
           bubble.style.opacity = '1';
           bubble.style.transform = 'scale(1) rotate(0deg)';
           if (onComplete) onComplete();
@@ -733,21 +732,17 @@
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / MASTERY_DURATION, 1);
         
-        // Ease out expo for satisfying deceleration
         const easeOutExpo = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         
-        // Calculate exact percentage
         const exactValue = TARGET_PERCENTAGE * easeOutExpo;
         const displayValue = Math.round(exactValue);
         
-        // Update both in the same frame for perfect sync
         masteryPercent.textContent = displayValue;
         masteryBar.style.width = `${exactValue}%`;
         
         if (progress < 1) {
           requestAnimationFrame(updateCount);
         } else {
-          // Lock final values
           masteryPercent.textContent = TARGET_PERCENTAGE;
           masteryBar.style.width = `${TARGET_PERCENTAGE}%`;
           if (onComplete) onComplete();
@@ -763,39 +758,32 @@
     function runAnimationSequence() {
       if (!isVisible) return;
       
-      // STEP 1: Draw stroke
       animateStroke(() => {
         if (!isVisible) return;
         
-        // STEP 2: Swap stroke for fill after short delay
         const fillTimeout = setTimeout(() => {
           if (!isVisible) return;
           
           showFill(() => {
             if (!isVisible) return;
             
-            // STEP 3: Show bubble after delay
             const bubbleTimeout = setTimeout(() => {
               if (!isVisible) return;
               
               showBubble(() => {
                 if (!isVisible) return;
                 
-                // STEP 4: Animate mastery after delay
                 const masteryTimeout = setTimeout(() => {
                   if (!isVisible) return;
                   
                   animateMastery(() => {
                     if (!isVisible) return;
                     
-                    // STEP 5: Hold, then reset and loop
                     loopTimeout = setTimeout(() => {
                       if (!isVisible) return;
                       
-                      // Reset everything
                       resetAnimation();
                       
-                      // Pause before next loop
                       const restartTimeout = setTimeout(() => {
                         if (isVisible) {
                           runAnimationSequence();
@@ -816,10 +804,8 @@
       });
     }
     
-    // Initialize to reset state
     resetAnimation();
     
-    // Intersection Observer to trigger animation when demo section is visible
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -840,11 +826,6 @@
 
   /**
    * Setup smooth scroll for navigation links and buttons
-   * Handles all anchor links with smooth scrolling and offset for fixed navbar
-   * Enhanced with custom smooth scrolling for better performance
-   */
-  /**
-   * Setup smooth scroll for navigation links and buttons
    * Uses Lenis if available, otherwise falls back to native/custom smooth scroll
    */
   function setupSmoothScroll() {
@@ -861,14 +842,12 @@
       const targetElement = document.getElementById(targetId);
       if (!targetElement) return;
 
-      // Use Lenis if available
       if (lenisInstance) {
         lenisInstance.scrollTo(targetElement, {
           offset: -navbarOffset,
           duration: 1.2,
         });
       } else {
-        // Fallback to native smooth scroll
         const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarOffset;
         window.scrollTo({
           top: targetPosition,
@@ -877,7 +856,6 @@
       }
     }
 
-    // Handle "Learn more" button in hero - scrolls to features section
     const learnMoreBtn = document.querySelector('.hero-section .btn-secondary');
     if (learnMoreBtn) {
       learnMoreBtn.addEventListener('click', function(e) {
@@ -922,31 +900,23 @@
     }
 
     // Feature cards use scroll trigger instead of Intersection Observer
-    // Skip setting up stagger animations here - handled by setupScrollTriggerForFeatures
-
-    // Setup stagger animations for stats
     const statsGrid = document.querySelector('.stats-grid');
     if (statsGrid) {
       setupStaggerAnimation(statsGrid, '.stat-item', 150);
     }
 
-    // Setup stagger animations for zigzag timeline content (badges, titles, descriptions)
-    // Icons should remain static without animations
     const zigzagTimeline = document.querySelector('.zigzag-timeline');
     if (zigzagTimeline) {
       setupStaggerAnimation(zigzagTimeline, '.zigzag-content', 150);
     }
 
-    // Create intersection observer with smooth trigger points
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Small delay for smoother appearance
           const delay = entry.target.getAttribute('data-animate-delay') || 0;
           
           setTimeout(() => {
             entry.target.classList.add('animate-in');
-            // Stop observing once animated
             observer.unobserve(entry.target);
           }, parseInt(delay));
         }
@@ -961,12 +931,10 @@
     // Features section (header + cards) is handled by setupScrollTriggerForFeatures (no data-animate needed)
     const animatedElements = document.querySelectorAll('[data-animate]');
     animatedElements.forEach(el => {
-      // Skip zigzag timeline icons and rows - they should stay in place without animation
       if (el.closest('.zigzag-timeline') && (el.classList.contains('zigzag-icon-container') || el.classList.contains('zigzag-row'))) {
-        return; // Skip these elements - they remain static
+        return;
       }
       
-      // Initially hide the element (CSS handles this, but ensure it's set)
       if (el.style.opacity === '') {
         el.style.opacity = '0';
       }
@@ -988,9 +956,6 @@
     const featureCards = Array.from(featuresSection.querySelectorAll('.feature-card'));
     
     if (!featuresHeader) return;
-
-    // Initial state is set via CSS (opacity: 0, transform: translateY(30px))
-    // No need to set inline styles here - CSS handles initial hidden state
     
     let hasTriggered = false;
 
@@ -1043,7 +1008,6 @@
       }
     }
 
-    // Throttle scroll events for performance
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
@@ -1119,7 +1083,6 @@
       }
     }
 
-    // Throttle scroll events for performance
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
@@ -1163,12 +1126,9 @@
       const firstIconRect = firstIcon.getBoundingClientRect();
       const lastIconRect = lastIcon.getBoundingClientRect();
 
-      // Calculate icon center positions relative to the timeline container
       const firstIconCenterY = (firstIconRect.top + firstIconRect.height / 2) - timelineRect.top;
       const lastIconCenterY = (lastIconRect.top + lastIconRect.height / 2) - timelineRect.top;
 
-      // Set the line to start at center of first icon and end at center of last icon
-      // Line will span exactly from center to center, not extending beyond
       const lineTop = firstIconCenterY;
       const lineHeight = lastIconCenterY - firstIconCenterY;
 
@@ -1186,14 +1146,11 @@
       const lastIconRect = lastIcon.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Get the center positions of first and last icons
       const firstIconCenter = firstIconRect.top + firstIconRect.height / 2;
       const lastIconCenter = lastIconRect.top + lastIconRect.height / 2;
       
-      // The trigger point is when icons pass through viewport center
       const triggerPoint = windowHeight * 0.6;
       
-      // Calculate progress based on icon center positions relative to trigger point
       const totalDistance = lastIconCenter - firstIconCenter;
       const progressDistance = triggerPoint - firstIconCenter;
       
@@ -1222,7 +1179,6 @@
       updateTimelineProgress();
     }
 
-    // Throttle scroll events for performance
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
@@ -1234,15 +1190,12 @@
       }
     });
 
-    // Update line position on resize
     window.addEventListener('resize', function() {
       updateLinePosition();
     });
 
-    // Initial setup
     updateTimeline();
     
-    // Re-run after a short delay to ensure layout is complete
     setTimeout(updateTimeline, 100);
     setTimeout(updateTimeline, 500);
   }
@@ -1256,14 +1209,8 @@
     const backToTopButton = document.getElementById('back-to-top');
     if (!backToTopButton) return;
 
-    /**
-     * Scroll threshold to show the button (in pixels from top)
-     */
     const scrollThreshold = 300;
 
-    /**
-     * Handle scroll event to show/hide back-to-top button
-     */
     function handleScroll() {
       const scrollY = window.scrollY || window.pageYOffset;
       
@@ -1274,9 +1221,6 @@
       }
     }
 
-    /**
-     * Scroll to top smoothly when button is clicked
-     */
     function scrollToTop() {
       window.scrollTo({
         top: 0,
@@ -1284,7 +1228,6 @@
       });
     }
 
-    // Throttle scroll events for performance
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {

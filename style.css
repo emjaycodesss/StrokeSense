@@ -382,15 +382,11 @@ section {
 }
 
 .navbar.navbar-scrolled .navbar-container {
-  /* UPDATED: Width reduced from 90% to 80% for a tighter look */
   width: 80%; 
   
   background-color: var(--color-surface);
   border-color: var(--color-ink);
   
-  /* UPDATED: Changed from --radius-pill (100px) to --radius-lg (24px) 
-     This creates a "Soft Box" shape that matches your Cards 
-     and complements the 12px Buttons. */
   border-radius: var(--radius-lg); 
   
   padding: 0.75rem 2rem;
@@ -814,11 +810,6 @@ section {
 .avatar:nth-child(1) { background-color: #FF5F56; z-index: 3; }
 .avatar:nth-child(2) { background-color: #FFBD2E; z-index: 2; }
 .avatar:nth-child(3) { background-color: #27C93F; z-index: 1; }
-
-/* Remove the arrow styles since we deleted it from HTML */
-.trust-arrow {
-  display: none;
-}
 
 /* Features Section - Extra spacing before demo section */
 .features-section {
@@ -1530,61 +1521,8 @@ section {
   }
 }
 
-.how-it-works-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-}
-
-.process-step {
-  text-align: center;
-  background: var(--color-surface);
-  border: var(--border-width) solid var(--color-ink);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  position: relative;
-  margin-top: var(--space-md); /* Space for floating number */
-}
-
-.step-number {
-  position: absolute;
-  top: -24px; left: 50%; transform: translateX(-50%);
-  width: 48px; height: 48px;
-  background: var(--color-ink);
-  color: var(--color-surface);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-heading);
-  font-weight: 900;
-  font-size: 1.5rem;
-}
-
 /* ==========================================================================
-   9. BENTO GRID
-   ========================================================================== */
-.bento-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-  grid-auto-rows: minmax(250px, auto);
-}
-
-.bento-card {
-  /* Inherits .card styles automatically */
-  display: flex;
-  flex-direction: column;
-}
-
-.benefits-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-}
-.benefit-item { display: flex; gap: 12px; }
-
-/* ==========================================================================
-   10. CTA SECTION
+   9. CTA SECTION
    ========================================================================== */
 .cta-section {
   margin-bottom: var(--space-lg); /* Add spacing after CTA section */
@@ -1892,10 +1830,6 @@ section {
     gap: var(--space-sm); /* Reduced gap on tablets for better fit */
   }
   
-  .how-it-works-grid, .benefits-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  
   .features-grid .feature-card {
     width: 100%;
   }
@@ -1921,8 +1855,6 @@ section {
     width: auto;
     min-width: 200px;
   }
-  
-  .bento-benefits { grid-column: span 2; }
 }
 
 /* Mobile & Tablet (<= 991px) - Hide desktop nav, show hamburger */
@@ -1973,10 +1905,6 @@ section {
     gap: var(--space-md); /* Standard gap on desktop for better spacing */
   }
   
-  .how-it-works-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
   /* Footer grid: Brand takes 2 columns, links/resources/social each take 1 */
   .footer-grid {
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -1997,12 +1925,6 @@ section {
   .for-everyone-content {
     order: 2;
   }
-  
-  .bento-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .bento-fun-fact { grid-column: span 3; }
   
   .cta-form { flex-direction: row; }
 }
@@ -2131,11 +2053,11 @@ section {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden; 
   }
   
   .character-info {
-    flex-wrap: wrap; /* Allow wrapping */
+    flex-wrap: wrap;
     flex-direction: column; /* Stack badge and title */
     align-items: flex-start;
     gap: 0.5rem;
