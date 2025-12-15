@@ -1,72 +1,2413 @@
-/* style.css */
-body {
-  font-family: Arial, sans-serif;
+/* ==========================================================================
+   1. DESIGN TOKENS (The Source of Truth)
+   ========================================================================== */
+:root {
+  /* --- COLOR PALETTE --- */
+  --color-bg: #F5F1E8;        /* Parchment */
+  --color-surface: #FFFFFF;   /* Cards/White */
+  --color-ink: #0A0A0A;       /* Text/Borders */
+  --color-muted: #4B5563;     /* Subtitles */
+  
+  --color-accent-primary: #EFCF61;   /* Marigold */
+  --color-accent-secondary: #b090e8; /* Electric Violet */
+  --color-accent-tertiary: #4e9f96;  /* Teal */
+
+  /* --- TYPOGRAPHY (Scale) --- */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Space Grotesk', sans-serif;
+
+  /* Fluid Type: Min (Mobile) -> Max (Desktop) */
+  --text-display: clamp(3rem, 6vw, 4.5rem);  /* Hero H1 */
+  --text-h1: clamp(2.5rem, 5vw, 3.5rem);     /* Section Headers */
+  --text-h2: clamp(1.5rem, 3vw, 2.25rem);    /* Card Headers */
+  --text-body-lg: 1.125rem;                  /* Intro text */
+  --text-body: 1rem;                         /* Standard text */
+  --text-sm: 0.875rem;                       /* Captions/Labels */
+
+  /* --- SPACING SCALE (8px Grid) --- */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 2rem;     /* 32px */
+  --space-lg: 4rem;     /* 64px */
+  --space-xl: 8rem;     /* 128px */
+  
+  /* --- LAYOUT --- */
+  --site-max-width: 1440px;
+  --site-edge-padding: clamp(1.5rem, 5vw, 4rem); /* Responsive side padding */
+  --header-height: 80px;
+
+  /* --- SHAPES & BORDERS --- */
+  --border-width: 3px;
+  --radius-sm: 12px;  /* Buttons, Inputs, Small Pills */
+  --radius-lg: 24px;  /* Cards, Hero Images, Sections */
+  --radius-pill: 100px;
+
+  /* --- SHADOWS (Hard Black) --- */
+  --shadow-sm: 2px 2px 0 0 var(--color-ink);
+  --shadow-md: 4px 4px 0 0 var(--color-ink);
+  --shadow-lg: 8px 8px 0 0 var(--color-ink);
+}
+
+/* ==========================================================================
+   2. RESET & BASE
+   ========================================================================== */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.hero {
+html {
+  font-size: 100%; /* 16px */
+  overflow-x: hidden;
+}
+
+/* Lenis smooth scroll compatibility */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important; /* Lenis handles smooth scrolling */
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin-bottom: var(--space-sm);
+}
+
+p {
+  color: var(--color-muted);
+  margin-bottom: var(--space-sm);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   3. LAYOUT UTILITIES
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--site-max-width);
+  margin: 0 auto;
+  padding-left: var(--site-edge-padding);
+  padding-right: var(--site-edge-padding);
+}
+
+/* Increase padding on mobile for better spacing from edges */
+@media (max-width: 991px) {
+  .container {
+    padding-left: 2rem; /* Better mobile spacing */
+    padding-right: 2rem;
+  }
+  
+  /* Align navbar with page content - match container padding */
+  .navbar-container {
+    padding-left: 2rem !important; /* Match container padding for alignment with headline */
+    padding-right: 2rem !important;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+  }
+  
+  /* Stats grid - stack on smaller tablets */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Footer grid - 2 columns on tablet */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    text-align: left;
+  }
+  
+  .footer-brand {
+    grid-column: span 2;
+  }
+}
+
+/* Standard Section Padding */
+section {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  position: relative;
+}
+
+/* Centered Section Headers */
+.section-header {
   text-align: center;
-  padding: 100px 20px;
-  background-color: #f5f5f5;
+  max-width: 800px;
+  margin: 0 auto var(--space-lg);
 }
 
-.cta {
-  padding: 15px 30px;
+.section-title {
+  font-size: var(--text-h1);
+}
+
+.section-subtitle {
+  font-size: var(--text-body-lg);
+  color: var(--color-muted);
+}
+
+/* ==========================================================================
+   4. COMPONENTS (The "Lego Blocks")
+   ========================================================================== */
+
+/* --- BUTTONS --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  font-family: var(--font-body);
   font-size: 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  font-weight: 700;
+  line-height: 1;
+  
+  padding: 1rem 2rem;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm); /* Consistent 12px */
+  
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.features {
+.btn-primary {
+  background-color: var(--color-accent-primary);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-ink);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-ink);
+  color: var(--color-surface);
+}
+
+/* --- CARDS --- */
+.card {
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg); /* Consistent 24px */
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Drawing canvas card - no shadow effects, allow overflow for bubble positioning */
+.drawing-canvas.card {
+  box-shadow: none;
+  overflow: visible; /* Allow bubble to extend outside card borders */
+}
+
+.drawing-canvas.card:hover {
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   BUG-FREE LOOP (7s Cycle)
+   Masks the restart to prevent "Flash" frames
+   ========================================================================== */
+
+/* 1. Character Container - JavaScript controls all child animations */
+/* No CSS animations - prevents conflicts with JavaScript animation logic */
+.baybayin-character {
+  opacity: 1; /* Always visible - JavaScript controls inner stroke/fill opacity */
+}
+
+/* 2. Stroke - Controlled entirely by JavaScript */
+/* No CSS transitions - JavaScript handles all animation to prevent glitches */
+.baybayin-stroke {
+  transition: none !important; /* Lock out any CSS transitions */
+}
+
+/* 3. Fill - Controlled entirely by JavaScript */
+/* No CSS transitions - JavaScript handles all animation to prevent glitches */
+.baybayin-fill {
+  opacity: 0; /* Hidden initially */
+  transition: none !important; /* Lock out any CSS transitions */
+}
+
+/* 4. Feedback Bubble - Controlled by JavaScript with inline styles */
+.canvas-feedback {
+  position: absolute;
+  top: -20px;
+  right: -25px;
+  z-index: 20;
+  
+  opacity: 0;
+  transform: scale(0) rotate(-10deg);
+  transform-origin: center center;
+  /* Transitions set by JavaScript */
+}
+
+/* 5. Style for the Bubble Content (Teal/White) */
+.canvas-feedback-content {
   display: flex;
-  justify-content: space-around;
-  padding: 50px 20px;
+  align-items: center;
+  gap: 8px;
+  
+  background-color: var(--color-accent-tertiary);
+  color: white;
+  
+  border: 3px solid black;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  
+  box-shadow: var(--shadow-sm); /* Match other elements */
+  
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.canvas-feedback-content svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* --- BADGES/PILLS --- */
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-accent-primary);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+/* ==========================================================================
+   5. NAVIGATION
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: var(--space-md) 0; /* Starts open/airy */
+  transition: padding 0.3s ease;
+  pointer-events: none; /* Pass clicks through the empty areas */
+}
+
+.navbar-container {
+  /* Use the global container logic manually to allow for the pill transition */
+  width: 100%;
+  max-width: var(--site-max-width);
+  margin: 0 auto;
+  padding: 1rem var(--site-edge-padding);
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  border: 2px solid transparent; /* Prepare for border */
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  pointer-events: auto; /* Re-enable clicks */
+}
+
+/* Scrolled State (Morphs to floating bar) */
+.navbar.navbar-scrolled {
+  padding-top: var(--space-sm);
+}
+
+.navbar.navbar-scrolled .navbar-container {
+  /* UPDATED: Width reduced from 90% to 80% for a tighter look */
+  width: 80%; 
+  
+  background-color: var(--color-surface);
+  border-color: var(--color-ink);
+  
+  /* UPDATED: Changed from --radius-pill (100px) to --radius-lg (24px) 
+     This creates a "Soft Box" shape that matches your Cards 
+     and complements the 12px Buttons. */
+  border-radius: var(--radius-lg); 
+  
+  padding: 0.75rem 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* KEEP MOBILE WIDE: 
+   80% is too narrow for phones, so we keep mobile at 95% */
+@media (max-width: 991px) {
+  .navbar.navbar-scrolled .navbar-container {
+    width: 95%; 
+  }
+}
+
+.navbar-logo {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   NAVBAR & HERO ENTRANCE ANIMATIONS
+   Initial hidden states and transitions for smooth page load
+   ========================================================================== */
+
+/* Navbar elements - initial hidden state */
+.navbar-logo,
+.navbar-links .nav-link,
+.navbar-auth > *,
+.navbar-toggle {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Navbar visible state */
+.navbar-logo.nav-visible,
+.navbar-links .nav-link.nav-visible,
+.navbar-auth > *.nav-visible,
+.navbar-toggle.nav-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero elements - initial hidden state */
+.hero-title,
+.hero-description,
+.hero-buttons,
+.hero-trust-container,
+.hero-visual {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hero visible state */
+.hero-title.hero-visible,
+.hero-description.hero-visible,
+.hero-buttons.hero-visible,
+.hero-trust-container.hero-visible,
+.hero-visual.hero-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.navbar-links {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.nav-link {
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--color-accent-secondary);
+}
+
+.navbar-auth {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Increased gap slightly for clarity */
+}
+
+/* New Text Link Style for Log In */
+.nav-login-link {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--color-ink);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-login-link:hover {
+  color: var(--color-accent-secondary); /* Purple hover */
+  text-decoration: underline;
+}
+
+/* Ensure Sign Up button stays consistent */
+.btn-nav-get-started {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-sm);
+  /* Force Primary Button Styles */
+  background-color: var(--color-accent-primary);
+  color: var(--color-ink);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+.btn-nav-get-started:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+}
+
+.navbar.navbar-scrolled .btn-nav-get-started {
+  background-color: var(--color-accent-primary);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+/* Hamburger & Mobile Menu */
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1002; /* Higher than mobile menu */
+  position: relative;
+  width: 30px;
+  height: 24px;
+}
+
+/* When menu is active, fix the toggle button position */
+.navbar-toggle.active {
+  position: fixed;
+  top: 1.5rem;
+  right: 2.5rem; /* Match container padding */
+}
+
+.navbar-toggle span {
+  width: 24px; 
+  height: 2px; 
+  background: var(--color-ink);
+  display: block;
+  transition: all 0.25s ease;
+  border-radius: 2px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Initial positions for hamburger lines */
+.navbar-toggle span:nth-child(1) {
+  top: 4px;
+}
+
+.navbar-toggle span:nth-child(2) {
+  top: 11px;
+}
+
+.navbar-toggle span:nth-child(3) {
+  top: 18px;
+}
+
+/* Hamburger animation when active - creates a clean X shape */
+.navbar-toggle.active span:nth-child(1) {
+  top: 11px;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.navbar-toggle.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0);
+}
+
+.navbar-toggle.active span:nth-child(3) {
+  top: 11px;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+/* Mobile Menu Backdrop */
+.navbar-mobile-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 10, 10, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  display: none; /* Hidden by default on desktop */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+
+/* Show backdrop only on mobile/tablet */
+@media (max-width: 991px) {
+  .navbar-mobile-backdrop {
+    display: block; /* Show on mobile */
+  }
+}
+
+.navbar-mobile-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.navbar-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  max-height: 70vh;
+  min-height: 250px;
+  background: var(--color-surface);
+  z-index: 1000;
+  display: none; /* Hidden by default on desktop */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm); /* Reduced gap between items */
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  padding: var(--space-lg) var(--space-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-bottom: var(--border-width) solid var(--color-ink);
+}
+
+.navbar-mobile.active { 
+  transform: translateY(0); 
+}
+
+/* Show mobile menu only on mobile/tablet */
+@media (max-width: 991px) {
+  .navbar-mobile {
+    display: flex; /* Show on mobile */
+  }
+}
+
+/* Mobile menu links styling - clean design without divider lines */
+.navbar-mobile .nav-link {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.75rem 0;
+  width: 100%;
+  text-align: center;
+  border: none; /* No divider lines */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar-mobile .nav-link:hover {
+  color: var(--color-accent-secondary);
+  transform: scale(1.05);
+}
+
+.navbar-mobile .btn {
+  margin-top: var(--space-md);
+  width: 100%; /* Full width button */
+  max-width: 280px;
+  padding: 1rem 2rem;
+  font-size: 1.25rem; /* Match the font size of other menu items */
+}
+
+/* ==========================================================================
+   6. HERO SECTION
+   ========================================================================== */
+.hero-section {
+  min-height: auto; /* Removed 100dvh to prevent forced full-screen height when zooming */
+  display: flex;
+  align-items: center;
+  /* Add top padding to prevent collision with fixed navbar */
+  padding-top: calc(var(--header-height) + var(--space-md)); 
+  padding-bottom: var(--space-lg);
+  overflow: hidden;
+}
+
+/* Mobile view - improve layout (navbar is no longer fixed) */
+@media (max-width: 991px) {
+  .hero-section {
+    padding-top: var(--space-md); /* Simplified since navbar is not fixed on mobile */
+    padding-bottom: var(--space-lg);
+    min-height: auto;
+    align-items: center; /* Center the hero section */
+  }
+  
+  .hero-grid {
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    text-align: center; /* Center text on mobile */
+  }
+  
+  .hero-content {
+    padding-top: var(--space-sm);
+    text-align: center; /* Center text */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center child elements */
+  }
+  
+  .hero-title {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    text-align: center; /* Center title */
+  }
+  
+  .hero-description {
+    margin-bottom: 1.75rem;
+    text-align: center; /* Center description */
+  }
+  
+  .hero-buttons {
+    margin-bottom: 2.5rem;
+    justify-content: center; /* Center buttons */
+  }
+  
+  .hero-trust-container {
+    display: flex;
+    justify-content: center; /* Center social proof */
+  }
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.hero-title {
+  font-size: var(--text-display);
+  /* Reduced from standard spacing to pull it tighter to description */
+  margin-bottom: 1rem; 
+  margin-top: -0.2em; 
+}
+
+/* Highlight Underline */
+.highlight-yellow {
+  position: relative;
+  white-space: nowrap;
+  z-index: 1;
+}
+.highlight-yellow::after {
+  content: '';
+  position: absolute;
+  bottom: 0.15em; left: 0; width: 100%; height: 0.25em;
+  background-color: var(--color-accent-primary);
+  z-index: -1;
+  transform: rotate(-1deg);
+  border-radius: 2px;
+}
+
+.hero-description {
+  font-size: var(--text-body-lg);
+  max-width: 55ch; /* Optimal line length for reading */
+  /* Reduced from var(--space-md) to pull buttons closer */
+  margin-bottom: 1.5rem; 
+  line-height: 1.5;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  /* Pull social proof closer */
+  margin-bottom: 2rem; 
+}
+
+/* Container is now just for positioning, no border/bg */
+.hero-trust-container {
+  display: block;
+}
+
+.hero-trust {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem; /* Reduced gap to keep text close to avatars */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.hero-trust p {
+  font-size: 16px;
+  color: var(--color-ink);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.avatars {
+  display: flex;
+  padding-left: 12px; /* Space for the overlapping stack */
+  flex-shrink: 0; /* Prevent avatars from shrinking */
+}
+
+.avatar {
+  width: 36px; 
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--color-ink);
+  margin-left: -12px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 12px; 
+  font-weight: 700;
+  color: var(--color-ink);
+  /* Solid shadow for avatars to make them pop */
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+/* Avatar Colors - Cycling through design tokens */
+.avatar:nth-child(1) { background-color: #FF5F56; z-index: 3; }
+.avatar:nth-child(2) { background-color: #FFBD2E; z-index: 2; }
+.avatar:nth-child(3) { background-color: #27C93F; z-index: 1; }
+
+/* Remove the arrow styles since we deleted it from HTML */
+.trust-arrow {
+  display: none;
+}
+
+/* Features Section - Extra spacing before demo section */
+.features-section {
+  margin-bottom: var(--space-md); /* Reduced from var(--space-xl) for less spacing before demo */
+}
+
+.demo-section {
+  padding-top: none; /* Reduced top padding */
+}
+
+/* ==========================================================================
+   HOW IT WORKS: ZIG-ZAG TIMELINE
+   ========================================================================== */
+
+.how-it-works-section {
+  position: relative;
+  /* Extra bottom padding for the timeline tail */
+  padding-bottom: 6rem; 
+}
+
+/* MAIN CONTAINER */
+.zigzag-timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem; /* Spacing between rows */
+}
+
+/* THE CENTRAL SPINE (Vertical Pipe) */
+/* Timeline line container - positioned dynamically via JS */
+.zigzag-timeline {
+  --line-top: 40px;    /* Set dynamically by JS */
+  --line-height: 0px;  /* Set dynamically by JS */
+}
+
+/* Background line - unfilled state */
+/* Line appears below icons, connecting from bottom of first icon to bottom of last icon */
+.zigzag-timeline::before {
+  content: '';
+  position: absolute;
+  top: var(--line-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: var(--line-height);
+  background-color: rgba(0, 0, 0, 0.15); /* Light gray unfilled */
+  border-radius: 3px;
+  z-index: 0; /* Behind icons (icons have z-index 10) */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Progress line - fills as user scrolls */
+/* Appears below icons, same positioning as background line */
+.zigzag-timeline::after {
+  content: '';
+  position: absolute;
+  top: var(--line-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: calc(var(--line-height) * var(--timeline-progress, 0) / 100); /* Controlled by JS */
+  background-color: var(--color-ink); /* Filled color */
+  border-radius: 3px;
+  z-index: 1; /* Above background line, but still behind icons (icons have z-index 10) */
+  transition: height 0.15s ease-out;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* ROW WRAPPER */
+.zigzag-row {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  z-index: 5; /* Ensure rows are above timeline line but below icons */
+}
+
+/* CENTER ICON (The Anchor) */
+.zigzag-icon-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20; /* High z-index to ensure icons always appear above timeline line */
+  
+  width: 80px;
+  height: 80px;
+  /* Background color set via inline styles in HTML (purple, yellow, teal) */
+  background-color: var(--color-bg); /* Fallback - will be overridden by inline styles */
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+  transition: transform 0.2s ease;
+  
+  /* Ensure solid background fully covers line behind icon */
+  background-clip: padding-box;
+}
+
+.zigzag-row:hover .zigzag-icon-container {
+  transform: translateX(-50%) scale(1.1);
+}
+
+.zigzag-icon-container svg {
+  width: 36px;
+  height: 36px;
+  stroke-width: 2.5px;
+}
+
+/* TEXT CONTENT BOX */
+.zigzag-content {
+  width: 42%; /* Leaves space in middle */
+  position: relative;
+}
+
+/* HORIZONTAL CONNECTORS (Removed - no longer displaying) */
+.zigzag-content::after {
+  display: none;
+}
+
+/* --- LEFT SIDE VARIATION --- */
+.row-left {
+  justify-content: flex-start;
+}
+.row-left .zigzag-content {
+  text-align: right;
+  padding-right: 2rem;
+}
+
+/* --- RIGHT SIDE VARIATION --- */
+.row-right {
+  justify-content: flex-end;
+}
+.row-right .zigzag-content {
+  text-align: left;
+  padding-left: 2rem;
+}
+
+
+/* CONTENT TYPOGRAPHY */
+.step-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border: 2px solid var(--color-ink);
+  padding: 0.35rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  background-color: var(--color-surface);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+.zigzag-content h3 {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.zigzag-content p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+/* ALIGNMENT HELPERS */
+/* Ensure flex columns align text properly for L vs R */
+.row-left .step-header {
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-end; /* Align right */
+}
+
+.row-right .step-header {
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-start; /* Align left */
+}
+
+/* --- MOBILE / TABLET RESPONSIVE (< 900px) --- */
+/* Collapse zig-zag back to vertical list on smaller screens */
+@media (max-width: 900px) {
+  .zigzag-timeline {
+    gap: 3rem;
+  }
+  
+  /* Move Spine to Left */
+  .zigzag-timeline::before {
+    left: 40px; /* Offset from edge */
+  }
+  
+  .zigzag-timeline::after {
+    left: 40px;
+  }
+  
+  /* Reset Row Layout - all steps align the same way on mobile */
+  .zigzag-row {
+    justify-content: flex-start !important; /* Always align left */
+  }
+  
+  /* Icon moves to left spine for all steps */
+  .zigzag-icon-container {
+    position: absolute;
+    left: 40px; 
+    transform: translateX(-50%); /* Center on spine */
+  }
+  
+  .zigzag-row:hover .zigzag-icon-container {
+    transform: translateX(-50%) scale(1.1);
+  }
+  
+  /* Content moves right - same styling for ALL steps on mobile */
+  .zigzag-content {
+    width: 100%;
+    padding-left: 100px !important; /* Clear the icon area */
+    text-align: left !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Override row-right specific styles to match row-left on mobile */
+  .row-right .zigzag-content {
+    text-align: left !important;
+    padding-left: 100px !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Remove Horizontal Connectors on mobile (can be messy) */
+  .zigzag-content::after {
+    display: none; 
+  }
+  
+  /* All step headers align the same way on mobile */
+  .step-header {
+    align-items: flex-start !important;
+  }
+  
+  .row-right .step-header {
+    align-items: flex-start !important;
+  }
+  
+  /* Text resize - same for all steps */
+  .zigzag-content h3 {
+    font-size: 2rem;
+  }
+}
+
+/* ==========================================================================
+   7. FEATURES SECTION
+   ========================================================================== */
+
+/* Initial hidden state for features section - prevents glitch on load */
+#features .section-header,
+#features .feature-card {
+  opacity: 0;
+  transform: translateY(30px);
+  /* Smooth transition for animation */
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Visible state when animated (set by JS) */
+#features .section-header.features-visible,
+#features .feature-card.features-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
 }
 
 .feature-card {
-  flex: 1;
-  margin: 0 10px;
-  padding: 20px;
-  background: #ffffff;
+  padding-top: var(--space-md);
+  /* Remove shadow completely - only border visible */
+  box-shadow: none;
+  /* Center all content */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature-card:hover {
+  /* Override .card:hover shadow - keep no shadow on feature cards */
+  box-shadow: none;
+}
+
+/* Color bar at top of card - Removed */
+.feature-card::before {
+  display: none;
+}
+
+/* Lottie icon containers - placed directly on feature cards */
+.lottie-icon {
+  width: 148px;
+  height: 148px;
+  margin: 0 auto var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lottie-icon svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 128px;
+  max-height: 128px;
+}
+
+/* Feature Card Typography */
+.feature-card h3 {
+  font-size: 24px;
+}
+
+/* ==========================================================================
+   8. DEMO & HOW IT WORKS
+   ========================================================================== */
+.browser-mockup {
+  background: var(--color-accent-secondary);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  /* Shadow removed completely - no shadow on default or hover */
+  box-shadow: none;
+}
+
+.browser-chrome {
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-bottom: none;
+  padding: 0.75rem 1rem;
+  display: flex; 
+  align-items: center;
+  gap: 8px;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.browser-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--color-ink);
+}
+
+/* Address Bar (Clean) */
+.browser-address {
+  flex-grow: 1;
+  height: 28px;
+  background-color: var(--color-bg); /* Match site bg color */
+  border-radius: 6px;
+  margin-left: 1rem;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  text-align: center;
 }
 
-.visual img {
+.browser-content {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  padding: var(--space-md);
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  overflow: visible; /* Allow bubble to extend outside container */
+}
+
+/* ==========================================================================
+   INTERNAL APP UI ELEMENTS
+   ========================================================================== */
+
+/* App Header Alignment */
+.app-ui-header {
   width: 100%;
-  max-width: 800px;
-  display: block;
-  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
 }
 
-.info {
-  padding: 50px 20px;
+.character-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.cta-final {
+/* Ensure Text Hierarchy */
+.character-info h2 {
+  margin: 0;
+  font-size: var(--text-h2);
+  font-family: var(--font-heading);
+  font-weight: 900;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.75rem;
+}
+
+.character-info .badge {
+  vertical-align: middle;
+}
+
+.progress-container {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.progress-container p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* Progress Bar */
+.progress-bar-bg {
+  width: 140px;
+  height: 12px;
+  background: #E5E5E5;
+  border: 2px solid var(--color-ink);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  width: 0%; /* Start at 0%, animated by JavaScript */
+  height: 100%;
+  background: var(--color-accent-tertiary); /* Teal fill */
+  /* No CSS transition - JavaScript handles animation for perfect sync with percentage number */
+}
+
+/* Canvas Stage Elements */
+.canvas-stage {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  width: 100%;
+  justify-content: center;
+}
+
+.canvas-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Tool Buttons (Icon Styles) */
+.tool-btn {
+  width: 48px;
+  height: 48px;
+  background: white;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 12px; /* Slightly squarer than before */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 0 var(--color-ink);
+  color: var(--color-ink);
+  transition: all 0.2s ease;
+}
+
+.tool-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Active State (Pressed down) */
+.tool-btn.active {
+  background: var(--color-accent-primary);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--color-ink); /* Reduced shadow when active */
+}
+
+/* Hover State */
+.tool-btn:not(.active):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 var(--color-ink);
+}
+
+/* --- GUIDE LAYER STYLES (Static Wa character with lower opacity) --- */
+.baybayin-guide {
+  /* CRITICAL: Force static state - no animations */
+  animation: none !important;
+  opacity: 0.3 !important; /* Lower opacity for guide */
+}
+
+.baybayin-guide use {
+  fill: var(--color-ink); /* Use the same color as the character */
+  stroke: none;
+  
+  /* Ensure no animation inheritance */
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* Instruction Pill - Positioned above mockup */
+.demo-instruction {
+  margin-bottom: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.demo-instruction .badge {
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-sm);
   text-align: center;
-  padding: 70px 20px;
 }
 
-footer {
+/* Platform compatibility text below mockup */
+.demo-platform-text {
+  margin-top: 1rem;
   text-align: center;
-  padding: 20px;
-  background: #333;
-  color: #fff;
+  font-size: var(--text-body);
+  color: var(--color-muted);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  margin-bottom: 0;
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-  .features {
-    flex-direction: column;
+/* ==========================================================================
+   FOR EVERYONE SECTION
+   ========================================================================== */
+.for-everyone-section {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-lg); /* Add spacing after this section */
+}
+
+.for-everyone-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md); /* Reduced from var(--space-lg) for tighter spacing */
+  align-items: center;
+}
+
+.for-everyone-animation {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top to minimize bottom spacing */
+  order: 1;
+  overflow: hidden; /* Crop any overflow */
+}
+
+.lottie-animation {
+  width: 100%;
+  max-width: 600px;
+  height: 600px;
+  overflow: hidden; /* Crop the SVG without affecting paths */
+  display: flex;
+  align-items: flex-start; /* Align content to top */
+  justify-content: center;
+}
+
+.for-everyone-content {
+  text-align: right;
+  order: 2;
+}
+
+.for-everyone-content .section-title {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.for-everyone-content .section-subtitle {
+  text-align: right;
+  margin-bottom: 0;
+}
+
+/* Mobile view - center content and minimize spacing */
+@media (max-width: 991px) {
+  .for-everyone-grid {
+    gap: var(--space-xs); /* Minimized spacing - 8px */
+    text-align: center;
   }
+  
+  .for-everyone-content {
+    text-align: center;
+    margin-top: 0;
+  }
+  
+  .for-everyone-content .section-title {
+    text-align: center;
+    margin-top: 0;
+  }
+  
+  .for-everyone-content .section-subtitle {
+    text-align: center;
+  }
+  
+  .for-everyone-animation {
+    margin-bottom: 0; /* Remove extra margin */
+  }
+  
+  .lottie-animation {
+    margin-bottom: 0; /* Remove any margin from animation */
+    height: 300px !important; /* Significantly reduced height on mobile to minimize spacing */
+    max-height: 300px !important;
+    overflow: hidden; /* Crop bottom portion without affecting paths */
+  }
+  
+  .for-everyone-animation {
+    overflow: hidden; /* Ensure container crops properly */
+    height: 300px;
+    max-height: 300px;
+    align-items: flex-start; /* Align to top */
+  }
+  
+  /* Ensure Lottie container respects the height constraint */
+  .for-everyone-animation > div,
+  .for-everyone-animation svg,
+  .for-everyone-animation canvas {
+    height: 100% !important;
+    width: auto;
+    max-height: 300px;
+  }
+}
+
+/* ==========================================================================
+   STATS SECTION
+   ========================================================================== */
+.stats-section {
+  background: var(--color-surface); /* White background */
+  padding: var(--space-lg) 0;
+  width: 100%;
+  border-top: var(--border-width) solid var(--color-ink); /* Top border only */
+  border-bottom: var(--border-width) solid var(--color-ink); /* Bottom border only */
+  margin-bottom: var(--space-xl);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-ink);
+}
+
+.stat-label {
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 600;
+  color: var(--color-ink);
+  opacity: 0.95;
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .app-ui-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .character-info h2 {
+    display: block;
+    margin-top: 0.5rem;
+    margin-left: 0;
+  }
+  
+  .progress-container {
+    width: 100%; /* Full width on mobile */
+    align-items: flex-start; /* Align to left on mobile */
+    text-align: left; /* Left align text on mobile */
+  }
+  
+  .progress-bar-bg {
+    width: 100%; /* Full width progress bar on mobile */
+    max-width: 100%;
+  }
+  
+  .canvas-stage {
+    flex-direction: row; /* Horizontal layout: tools on left, canvas on right */
+    align-items: flex-start; /* Align to top */
+    justify-content: flex-start; /* Align to left side */
+    gap: 1rem; /* Reduced gap for mobile */
+  }
+  
+  .canvas-tools {
+    flex-direction: column; /* Vertical arrangement of tools */
+    margin-bottom: 0; /* Remove bottom margin since tools are on the side */
+    flex-shrink: 0; /* Prevent tools from shrinking */
+  }
+}
+
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+.process-step {
+  text-align: center;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  position: relative;
+  margin-top: var(--space-md); /* Space for floating number */
+}
+
+.step-number {
+  position: absolute;
+  top: -24px; left: 50%; transform: translateX(-50%);
+  width: 48px; height: 48px;
+  background: var(--color-ink);
+  color: var(--color-surface);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   9. BENTO GRID
+   ========================================================================== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  grid-auto-rows: minmax(250px, auto);
+}
+
+.bento-card {
+  /* Inherits .card styles automatically */
+  display: flex;
+  flex-direction: column;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.benefit-item { display: flex; gap: 12px; }
+
+/* ==========================================================================
+   10. CTA SECTION
+   ========================================================================== */
+.cta-section {
+  margin-bottom: var(--space-lg); /* Add spacing after CTA section */
+}
+
+.cta-container {
+  background: var(--color-accent-secondary);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 600px;
+  margin: var(--space-md) auto 0;
+  align-items: center;
+}
+
+.cta-buttons .btn {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* CTA Secondary Button - White background for contrast on purple */
+.cta-buttons .btn-secondary {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.cta-buttons .btn-secondary:hover {
+  background-color: var(--color-ink);
+  color: var(--color-surface);
+}
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+.footer {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-top: var(--border-width) solid rgba(255, 255, 255, 0.1);
+  margin-top: var(--space-lg); /* Add spacing before footer */
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* Footer columns - ensure proper alignment */
+@media (min-width: 768px) {
+  .footer-col {
+    align-items: flex-start;
+  }
+  
+  .footer-brand {
+    max-width: none; /* Allow brand column to use its grid space */
+  }
+}
+
+/* Footer Columns */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Brand Column */
+.footer-brand {
+  max-width: 400px;
+}
+
+.footer-logo {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-surface);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.footer-tagline {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.footer-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  max-width: 350px;
+}
+
+/* Footer Headings */
+.footer-heading {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-surface);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Footer Navigation */
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: var(--color-accent-primary);
+  transform: translateX(4px);
+}
+
+/* Social Links */
+.footer-socials {
+  align-items: flex-start;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+}
+
+.social-link:hover {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-ink);
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  text-align: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: var(--space-lg);
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* ==========================================================================
+   FOOTER ENTRANCE ANIMATIONS
+   Initial hidden states and transitions for scroll-triggered animation
+   ========================================================================== */
+
+/* Footer columns - initial hidden state */
+.footer-col {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer bottom - initial hidden state */
+.footer-bottom {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer visible state */
+.footer-col.footer-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer-bottom.footer-visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   BACK TO TOP BUTTON
+   ========================================================================== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  
+  width: 56px;
+  height: 56px;
+  
+  background-color: var(--color-accent-primary);
+  color: var(--color-ink);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: 50%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background-color: var(--color-ink);
+  color: var(--color-accent-primary);
+  transform: translateY(-4px);
+}
+
+.back-to-top:active {
+  transform: translateY(-2px);
+}
+
+.back-to-top svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Hide back-to-top on mobile/tablet or adjust position */
+@media (max-width: 991px) {
+  .back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .back-to-top svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ==========================================================================
+   12. MEDIA QUERIES (Responsiveness)
+   ========================================================================== */
+
+/* Tablet & Up (>= 768px) */
+@media (min-width: 768px) {
+  /* Features grid: 3 columns on tablet and up for all cards in same row */
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm); /* Reduced gap on tablets for better fit */
+  }
+  
+  .how-it-works-grid, .benefits-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .features-grid .feature-card {
+    width: 100%;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  /* Footer grid: Brand column (2fr), Links (1fr), Resources (1fr), Social (1fr) */
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+  
+  .cta-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .cta-buttons .btn {
+    width: auto;
+    min-width: 200px;
+  }
+  
+  .bento-benefits { grid-column: span 2; }
+}
+
+/* Mobile & Tablet (<= 991px) - Hide desktop nav, show hamburger */
+@media (max-width: 991px) {
+  .navbar-links,
+  .navbar-auth {
+    display: none;
+  }
+  
+  .navbar-toggle {
+    display: flex;
+  }
+  
+  /* Make navbar not sticky on mobile */
+  .navbar {
+    position: relative; /* Changed from fixed to relative */
+    pointer-events: auto; /* Re-enable pointer events since it's not fixed */
+  }
+  
+  /* Remove morphing effect on mobile - navbar stays the same when scrolling */
+  .navbar.navbar-scrolled {
+    padding-top: var(--space-md); /* Keep original padding */
+  }
+  
+  .navbar.navbar-scrolled .navbar-container {
+    width: 100%; /* Keep full width */
+    background-color: transparent; /* No background change */
+    border-color: transparent; /* No border */
+    border-radius: var(--radius-sm); /* Keep original radius */
+    padding: 1rem var(--site-edge-padding); /* Keep original padding */
+    box-shadow: none; /* No shadow */
+  }
+}
+
+/* Desktop & Up (>= 1024px) */
+@media (min-width: 1024px) {
+  .navbar-auth, .navbar-links { display: flex; }
+  .navbar-toggle { display: none; }
+  
+  .hero-grid {
+    grid-template-columns: 0.9fr 1.1fr; /* Image larger */
+    text-align: left;
+  }
+  
+  /* Features grid: 3 columns with standard gap on desktop */
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md); /* Standard gap on desktop for better spacing */
+  }
+  
+  .how-it-works-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Footer grid: Brand takes 2 columns, links/resources/social each take 1 */
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+  
+  .for-everyone-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md); /* Reduced from var(--space-xl) for tighter spacing */
+  }
+  
+  .for-everyone-animation {
+    order: 1;
+    justify-content: flex-start;
+  }
+  
+  .for-everyone-content {
+    order: 2;
+  }
+  
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .bento-fun-fact { grid-column: span 3; }
+  
+  .cta-form { flex-direction: row; }
+}
+
+/* ==========================================================================
+   COMPREHENSIVE MOBILE RESPONSIVE STYLES (<= 576px)
+   ========================================================================== */
+@media (max-width: 576px) {
+  /* --- TYPOGRAPHY ADJUSTMENTS --- */
+  :root {
+    --text-display: 2.25rem; /* Smaller hero title */
+    --text-h1: 1.75rem;      /* Smaller section headers */
+    --text-h2: 1.25rem;      /* Smaller card headers */
+    --text-body-lg: 1rem;    /* Standard body text */
+  }
+  
+  /* --- CONTAINER & SPACING --- */
+  .container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  
+  .navbar-container {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+  
+  section {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+  
+  /* --- HERO SECTION --- */
+  .hero-section {
+    padding-top: var(--space-sm);
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .hero-trust {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .hero-trust p {
+    font-size: 14px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 10px;
+  }
+  
+  /* --- FEATURES SECTION --- */
+  .features-section {
+    margin-bottom: var(--space-md);
+    padding-top: var(--space-sm); /* Reduced top padding on mobile */
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+  
   .feature-card {
-    margin: 10px 0;
+    padding: var(--space-sm);
+  }
+  
+  .feature-card h3 {
+    font-size: 1.25rem;
+  }
+  
+  .lottie-icon {
+    width: 100px;
+    height: 100px;
+  }
+  
+  /* --- DEMO SECTION --- */
+  .demo-section {
+    padding-top: var(--space-sm);
+  }
+  
+  .demo-instruction {
+    margin-bottom: 1rem;
+  }
+  
+  .demo-instruction .badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .browser-mockup {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  .browser-content {
+    padding: var(--space-sm);
+  }
+  
+  .app-ui-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .character-info {
+    flex-wrap: wrap; /* Allow wrapping */
+    flex-direction: column; /* Stack badge and title */
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 100%; /* Prevent overflow */
+    width: 100%;
+  }
+  
+  .character-info .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
+  }
+  
+  .character-info h2 {
+    font-size: 1.25rem; /* Increased from 0.875rem for better readability */
+    margin-left: 0;
+    word-break: break-word; /* Allow text to break */
+    max-width: 100%;
+  }
+  
+  .canvas-stage {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .canvas-tools {
+    flex-direction: row;
+    margin-bottom: 0.75rem;
+  }
+  
+  .tool-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .tool-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .drawing-canvas.card {
+    padding: var(--space-sm);
+  }
+  
+  .canvas-svg {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .canvas-feedback {
+    top: -15px;
+    right: -15px;
+  }
+  
+  .canvas-feedback-content {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  .demo-platform-text {
+    font-size: 0.875rem;
+  }
+  
+  /* --- FOR EVERYONE SECTION --- */
+  .for-everyone-section {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+  
+  .lottie-animation {
+    height: 250px !important;
+    max-height: 250px !important;
+  }
+  
+  .for-everyone-animation {
+    height: 250px;
+    max-height: 250px;
+  }
+  
+  .for-everyone-content .section-title {
+    font-size: 1.5rem;
+  }
+  
+  .for-everyone-content .section-subtitle {
+    font-size: 1rem;
+  }
+  
+  /* --- STATS SECTION --- */
+  .stats-section {
+    padding: var(--space-md) 0;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .stat-label {
+    font-size: 1rem;
+  }
+  
+  /* --- HOW IT WORKS SECTION --- */
+  .how-it-works-section {
+    padding-bottom: var(--space-lg);
+  }
+  
+  .zigzag-timeline {
+    gap: 2rem;
+  }
+  
+  .zigzag-timeline::before {
+    left: 30px;
+    width: 4px;
+  }
+  
+  .zigzag-timeline::after {
+    left: 30px;
+    width: 4px;
+  }
+  
+  .zigzag-icon-container {
+    width: 60px;
+    height: 60px;
+    left: 30px !important;
+  }
+  
+  .zigzag-icon-container svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .zigzag-content {
+    padding-left: 80px !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Ensure step 2 (row-right) matches step 1 and 3 */
+  .row-right .zigzag-content {
+    padding-left: 80px !important;
+    padding-right: 0 !important;
+    text-align: left !important;
+  }
+  
+  .zigzag-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .zigzag-content p {
+    font-size: 1rem;
+  }
+  
+  .step-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+  }
+  
+  /* --- CTA SECTION --- */
+  .cta-container {
+    padding: var(--space-md) var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  .cta-container h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .cta-container p {
+    font-size: 1rem !important;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .cta-buttons .btn {
+    width: 100%;
+    max-width: 100%;
+    min-width: auto;
+  }
+  
+  /* --- FOOTER --- */
+  .footer {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-md);
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    text-align: left; /* Left aligned */
+  }
+  
+  .footer-brand {
+    max-width: 100%;
+    align-items: flex-start; /* Left aligned */
+  }
+  
+  .footer-logo {
+    font-size: 1.5rem;
+  }
+  
+  .footer-tagline {
+    font-size: 1rem;
+  }
+  
+  .footer-description {
+    font-size: 0.875rem;
+  }
+  
+  .footer-nav {
+    align-items: flex-start; /* Left aligned */
+  }
+  
+  .footer-socials {
+    align-items: flex-start; /* Left aligned */
+  }
+  
+  .social-links {
+    justify-content: flex-start; /* Left aligned */
+  }
+  
+  .footer-bottom {
+    padding-top: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+  
+  /* --- BUTTONS --- */
+  .btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+  
+  /* --- CARDS --- */
+  .card {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  /* --- SECTION HEADERS --- */
+  .section-header {
+    margin-bottom: var(--space-md);
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
+  }
+  
+  /* --- MOBILE MENU ADJUSTMENTS --- */
+  .navbar-toggle.active {
+    right: 1.25rem; /* Match container padding */
+  }
+  
+  .navbar-mobile {
+    padding: var(--space-md) var(--space-sm);
+  }
+  
+  .navbar-mobile .nav-link {
+    font-size: 1.25rem;
+    padding: 0.5rem 0;
+  }
+  
+  .navbar-mobile .btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
   }
 }
